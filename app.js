@@ -4,6 +4,8 @@ let docsContainer;
 let citySelect;
 let districtSelect;
 let uploadBtn;
+let updateUploadBtn;
+let resultContainer;
 
 function showMessage(text, type = "info") {
   if (!messageDiv) return;
@@ -157,8 +159,10 @@ async function fetchDocumentsStatus(onboardingId, AUTH_HEADER) {
         statusDiv.style.color = color;
       }
     });
+    return data;
   } catch (err) {
     showMessage("Evrak durumu alınırken hata oluştu.", "error");
+    return [];
   }
 }
 
@@ -249,6 +253,41 @@ async function uploadDocuments(AUTH_HEADER) {
   }
 }
 
+async function uploadUpdatedDocuments(onboardingId, AUTH_HEADER) {
+  showMessage("");
+  if (updateUploadBtn) updateUploadBtn.disabled = true;
+  const fileInputs = resultContainer.querySelectorAll("input[type=file]");
+  let successCount = 0;
+  let failCount = 0;
+  for (const input of fileInputs) {
+    if (input.files.length === 0) continue;
+    const documentTypeId = input.dataset.documentTypeId;
+    const documentId = input.dataset.documentId;
+    const file = input.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      await updateDocument(onboardingId, documentTypeId, documentId, formData);
+      successCount++;
+      document.getElementById(`status_${documentTypeId}`).textContent = "Yüklendi";
+      document.getElementById(`status_${documentTypeId}`).style.color = "green";
+    } catch (err) {
+      failCount++;
+      document.getElementById(`status_${documentTypeId}`).textContent = "Hata";
+      document.getElementById(`status_${documentTypeId}`).style.color = "red";
+    }
+  }
+  if (updateUploadBtn) updateUploadBtn.disabled = false;
+  if (successCount === 0 && failCount > 0) {
+    showMessage(`${failCount} belge yüklenemedi.`, "error");
+  } else if (successCount > 0 && failCount > 0) {
+    showMessage(`${successCount} belge yüklendi, ${failCount} belge yüklenemedi.`, "info");
+  } else if (successCount > 0) {
+    showMessage(`${successCount} belge başarıyla yüklendi.`, "success");
+  }
+  await fetchDocumentsStatus(onboardingId, AUTH_HEADER);
+}
+
 async function saveOnboardingHistory({ onboardingId, taxNo, companyName, email }) {
   try {
     await fetch('http://localhost:3000/save-onboarding-history', {
@@ -266,7 +305,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const onboardingForm = document.getElementById("onboardingForm");
   const submitBtn = document.getElementById("submitBtn");
   const updateForm = document.getElementById("updateForm");
-  const resultContainer = document.getElementById('resultContainer');
+  resultContainer = document.getElementById('resultContainer');
   const AUTH_HEADER = { Authorization: "Basic VXNyMTpQd2Qx" };
 
   if (!onboardingForm || !submitBtn || !citySelect || !districtSelect) {
@@ -319,16 +358,105 @@ document.addEventListener("DOMContentLoaded", () => {
     districtSelect.disabled = false;
   });
 
+  updateForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    resultContainer.innerHTML = '<div class="alert alert-info">Sorgulanıyor...</div>';
+    resultContainer.classList.remove('d-none');
+    const taxNo = document.getElementById('taxNoUpdate').value.trim();
+    try {
+      const res = await fetch(`http://localhost:3000/find-onboarding?taxNo=${encodeURIComponent(taxNo)}`);
+      if (!res.ok) throw new Error('Kayıt bulunamadı');
+      const record = await res.json();
+      const onboardingId = record.onboardingId;
+      if (!onboardingId) throw new Error('Onboarding ID bulunamadı');
+      const statuses = await fetchDocumentsStatus(onboardingId, AUTH_HEADER);
+      resultContainer.innerHTML = '';
+      let hasRejected = false;
+      statuses.forEach((doc) => {
+        const div = document.createElement('div');
+        div.className = 'mb-3';
+
+        const label = document.createElement('label');
+        label.className = 'form-label';
+        label.textContent = doc.documentDetail || `Belge ${doc.documentTypeId}`;
+        label.htmlFor = `upd_${doc.documentTypeId}`;
+        div.appendChild(label);
+
+        if (doc.status === 'rejected') {
+          const input = document.createElement('input');
+          input.type = 'file';
+          input.className = 'form-control';
+          input.id = `upd_${doc.documentTypeId}`;
+          input.dataset.documentTypeId = doc.documentTypeId;
+          if (doc.documentId) input.dataset.documentId = doc.documentId;
+          if (doc.onboardingDocumentId) input.dataset.documentId = doc.onboardingDocumentId;
+          div.appendChild(input);
+          hasRejected = true;
+        }
+
+        const statusDiv = document.createElement('div');
+        statusDiv.id = `status_${doc.documentTypeId}`;
+        statusDiv.style.marginTop = '5px';
+        statusDiv.style.fontSize = '0.9rem';
+        let statusText = '';
+        let color = '';
+        switch (doc.status) {
+          case 'approved':
+            statusText = 'Onaylandı';
+            color = 'green';
+            break;
+          case 'pending':
+            statusText = 'Beklemede';
+            color = 'orange';
+            break;
+          case 'rejected':
+            statusText = 'Revize Talebi';
+            color = 'red';
+            break;
+          default:
+            statusText = doc.status;
+            color = 'black';
+        }
+        statusDiv.textContent = `${statusText}${doc.comment ? ` - Not: ${doc.comment}` : ''}`;
+        statusDiv.style.color = color;
+        div.appendChild(statusDiv);
+        resultContainer.appendChild(div);
+      });
+
+      if (hasRejected) {
+        if (updateUploadBtn && updateUploadBtn.remove) updateUploadBtn.remove();
+        updateUploadBtn = document.createElement('button');
+        updateUploadBtn.textContent = 'Belgeleri Yükle';
+        updateUploadBtn.className = 'btn btn-secondary mt-3';
+        updateUploadBtn.type = 'button';
+        updateUploadBtn.addEventListener('click', () => uploadUpdatedDocuments(onboardingId, AUTH_HEADER));
+        resultContainer.appendChild(updateUploadBtn);
+      }
+    } catch (err) {
+      resultContainer.innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
+    }
+  });
+
   onboardingForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     clearInlineErrors();
     showMessage("");
     toggleSpinner(true, submitBtn);
     try {
-      // Form validation and submission would occur here
-    } finally {
-      toggleSpinner(false, submitBtn);
+  const phoneInput = document.getElementById("companyPhoneNumber");
+  if (phoneInput) {
+    let rawPhone = phoneInput.value.trim();
+    if (!rawPhone.startsWith("90")) {
+      if (rawPhone.startsWith("0")) rawPhone = rawPhone.slice(1);
+      if (rawPhone.startsWith("5")) rawPhone = "90" + rawPhone;
+      phoneInput.value = rawPhone;
     }
+  }
+
+  // Diğer form verilerini alma ve gönderme işlemleri burada olacak
+} finally {
+  toggleSpinner(false, submitBtn);
+}
   });
 });
 
