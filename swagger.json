@@ -1,0 +1,1274 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "PayByMe Digital Onboarding API",
+    "description": "PayByMe Digital Onboarding API Documentation",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/v1/onboarding/{onboardingDataId}": {
+      "get": {
+        "tags": [
+          "Pbm.Api.OnboardingApi"
+        ],
+        "summary": "Fetch the digital onboarding details",
+        "description": "\r\n    GET /api/v1/onboarding/{onboardingDataId}\r\n    ",
+        "operationId": "FetchOnboarding",
+        "parameters": [
+          {
+            "name": "onboardingDataId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": { }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.FetchOnboardingResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.FetchOnboardingResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/onboarding": {
+      "post": {
+        "tags": [
+          "Pbm.Api.OnboardingApi"
+        ],
+        "summary": "Create a new digital onboarding",
+        "description": "\r\n    POST /api/v1/onboarding\r\n    {\r\n      \"companyType\": 1,\r\n      \"product_SanalPOS\": true,\r\n      \"product_MobilOdeme\": true,\r\n      \"product_FizikselPOS\": false,\r\n      \"product_SoftPOS\": false,\r\n      \"product_ParaTransferi\": false,\r\n      \"companyDetail\": {\r\n        \"companyName\": \"Ornek Deneme Sirketi Ltd.\",\r\n        \"tradeRegisterNo\": \"123234\",\r\n        \"address\": \"Test Mahallesi Test Caddesi No:1 İstanbul Şişli\",\r\n        \"zipCode\": \"34365\",\r\n        \"countryCode\": \"TR\",\r\n        \"city\": \"TR-34\",\r\n        \"district\": \"3405\",\r\n        \"taxOffice\": \"Mecidiyeköy\",\r\n        \"taxNo\": \"1111111111\",\r\n        \"naceCode\": \"123456\",\r\n        \"website\": \"ornekwebsite.com.tr\",\r\n        \"companyPhoneNumber\": \"05312345678\",\r\n        \"iban\": \"TR000000000000000000000000\"\r\n      },\r\n      \"authorizedContact1\": {\r\n        \"name\": \"Yetkili İsim\",\r\n        \"surname\": \"Yetkili Soyisim\",\r\n        \"email\": \"yetkili@mail.com\",\r\n        \"phoneNumber\": 905312345678,\r\n        \"tckn\": 11111111111,\r\n        \"birthDate\": \"1900-12-31\",\r\n        \"representationType\": 1\r\n      },\r\n      \"businessPartner1\": {\r\n        \"name\": \"Ortak İsim\",\r\n        \"surname\": \"Ortak Soyisim\",\r\n        \"email\": \"ortak@mail.com\",\r\n        \"phoneNumber\": 905312345678,\r\n        \"tckn\": 11111111111,\r\n        \"birthDate\": \"1900-12-31\",\r\n        \"address\": \"Test Mahallesi Test Caddesi No:1 İstanbul Şişli\"\r\n      }\r\n    }",
+        "operationId": "CreateOnboarding",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pbm.Api.Data.Models.Request.Onboarding.OnboardingData"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.CreateOnboardingResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.CreateOnboardingResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/onboardingupdate/{onboardingDataId}": {
+      "post": {
+        "tags": [
+          "Pbm.Api.OnboardingApi"
+        ],
+        "summary": "Update existing digital onboarding",
+        "description": "\r\n    POST /api/v1/onboardingupdate/{onboardingDataId}\r\n    {\r\n      \"companyType\": 1,\r\n      \"product_SanalPOS\": true,\r\n      \"product_MobilOdeme\": true,\r\n      \"product_FizikselPOS\": false,\r\n      \"product_SoftPOS\": false,\r\n      \"product_ParaTransferi\": false,\r\n      \"companyDetail\": {\r\n        \"companyName\": \"Ornek Deneme Sirketi Ltd.\",\r\n        \"tradeRegisterNo\": \"123234\",\r\n        \"address\": \"Test Mahallesi Test Caddesi No:1 İstanbul Şişli\",\r\n        \"zipCode\": \"34365\",\r\n        \"countryCode\": \"TR\",\r\n        \"city\": \"TR-34\",\r\n        \"district\": \"3405\",\r\n        \"taxOffice\": \"Mecidiyeköy\",\r\n        \"taxNo\": \"1111111111\",\r\n        \"naceCode\": \"123456\",\r\n        \"website\": \"ornekwebsite.com.tr\",\r\n        \"companyPhoneNumber\": \"05312345678\",\r\n        \"iban\": \"TR000000000000000000000000\"\r\n      },\r\n      \"authorizedContact1\": {\r\n        \"name\": \"Yetkili İsim\",\r\n        \"surname\": \"Yetkili Soyisim\",\r\n        \"email\": \"yetkili@mail.com\",\r\n        \"phoneNumber\": 905312345678,\r\n        \"tckn\": 11111111111,\r\n        \"birthDate\": \"1900-12-31\",\r\n        \"representationType\": 1\r\n      },\r\n      \"businessPartner1\": {\r\n        \"name\": \"Ortak İsim\",\r\n        \"surname\": \"Ortak Soyisim\",\r\n        \"email\": \"ortak@mail.com\",\r\n        \"phoneNumber\": 905312345678,\r\n        \"tckn\": 11111111111,\r\n        \"birthDate\": \"1900-12-31\",\r\n        \"address\": \"Test Mahallesi Test Caddesi No:1 İstanbul Şişli\"\r\n      }\r\n    }",
+        "operationId": "UpdateOnboarding",
+        "parameters": [
+          {
+            "name": "onboardingDataId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pbm.Api.Data.Models.Request.Onboarding.OnboardingData"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.CreateOnboardingResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.CreateOnboardingResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/onboardingdocuments/{companyType}": {
+      "get": {
+        "tags": [
+          "Pbm.Api.OnboardingApi"
+        ],
+        "summary": "Fetch the digital onboarding document list",
+        "description": "\r\n    GET /api/v1/onboardingdocuments/{companyType}\r\n\r\n        {companyType}:\r\n        1:Ticari İşletme (Ltd,AŞ)\r\n        2:Şahış Şirketi\r\n    ",
+        "operationId": "FetchOnboardingDocuments",
+        "parameters": [
+          {
+            "name": "companyType",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": { }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.FetchOnboardingDocumentsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.FetchOnboardingDocumentsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/onboardingdocuments/{onboardingDataId}/{documentTypeId}": {
+      "post": {
+        "tags": [
+          "Pbm.Api.OnboardingApi"
+        ],
+        "summary": "Upload a digital onboarding document",
+        "description": "\r\n    POST /api/v1/onboardingdocuments/{companyType}\r\n\r\n        {companyType}:\r\n        1:Ticari İşletme (Ltd,AŞ)\r\n        2:Şahış Şirketi\r\n    ",
+        "operationId": "UploadOnboardingDocuments",
+        "parameters": [
+          {
+            "name": "onboardingDataId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "documentTypeId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "agreementDate",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "ipAddress",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "port",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "confirmationCode",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "file"
+                ],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.UploadOnboardingDocumentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.UploadOnboardingDocumentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cities": {
+      "get": {
+        "tags": [
+          "Pbm.Api.OnboardingApi"
+        ],
+        "summary": "Fetch the city code list",
+        "description": "\r\n    GET /api/v1/cities\r\n    ",
+        "requestBody": {
+          "content": { }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.CitiesResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.CitiesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/districts/{cityCode}": {
+      "get": {
+        "tags": [
+          "Pbm.Api.OnboardingApi"
+        ],
+        "summary": "Fetch the district code list",
+        "description": "\r\n    GET /api/v1/Districts/{CityCode}\r\n    ",
+        "parameters": [
+          {
+            "name": "cityCode",
+            "in": "path",
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": { }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.DistrictsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.DistrictsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Pbm.Api.Data.DatabaseObjects.Configuration.CitiesDto": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "cityCode": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Pbm.Api.Data.DatabaseObjects.Configuration.DistrictDto": {
+        "type": "object",
+        "properties": {
+          "cityCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "district": {
+            "type": "string",
+            "nullable": true
+          },
+          "districtCode": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Pbm.Api.Data.Models.Request.Onboarding.AuthorizedContact": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "surname": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "integer",
+            "description": "",
+            "format": "int64"
+          },
+          "tckn": {
+            "type": "integer",
+            "description": "",
+            "format": "int64"
+          },
+          "birthDate": {
+            "type": "string",
+            "description": "",
+            "format": "date-time",
+            "nullable": true
+          },
+          "representationType": {
+            "type": "integer",
+            "description": "1:Münferit\r\n2:Müşterek",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Pbm.Api.Data.Models.Request.Onboarding.BusinessPartner": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "surname": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "integer",
+            "description": "",
+            "format": "int64"
+          },
+          "tckn": {
+            "type": "integer",
+            "description": "",
+            "format": "int64"
+          },
+          "birthDate": {
+            "type": "string",
+            "description": "",
+            "format": "date-time",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Pbm.Api.Data.Models.Request.Onboarding.CompanyDetail": {
+        "type": "object",
+        "properties": {
+          "companyName": {
+            "type": "string",
+            "description": "Şirket Adı",
+            "nullable": true
+          },
+          "tradeRegisterNo": {
+            "type": "string",
+            "description": "Ticaret Sicil No",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "description": "Fatura Adresi",
+            "nullable": true
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "Posta Kodu",
+            "nullable": true
+          },
+          "countryCode": {
+            "type": "string",
+            "description": "Ülke Kodu",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "description": "İl",
+            "nullable": true
+          },
+          "district": {
+            "type": "string",
+            "description": "İlçe",
+            "nullable": true
+          },
+          "taxOffice": {
+            "type": "string",
+            "description": "Vergi Dairesi",
+            "nullable": true
+          },
+          "taxNo": {
+            "type": "string",
+            "description": "Vergi Numarası",
+            "nullable": true
+          },
+          "naceCode": {
+            "type": "string",
+            "description": "Nace Kodu",
+            "nullable": true
+          },
+          "website": {
+            "type": "string",
+            "nullable": true
+          },
+          "companyPhoneNumber": {
+            "type": "string",
+            "description": "Şirket telefon numarası",
+            "nullable": true
+          },
+          "iban": {
+            "type": "string",
+            "description": "TRY IBAN",
+            "nullable": true
+          },
+          "comment": {
+            "type": "string",
+            "description": "Şirket ile ilgili açıklama",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Pbm.Api.Data.Models.Request.Onboarding.Contact": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "surname": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "integer",
+            "description": "",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Pbm.Api.Data.Models.Request.Onboarding.OnboardingData": {
+        "type": "object",
+        "properties": {
+          "companyType": {
+            "type": "integer",
+            "description": "1:Ticari İşletme (Ltd,AŞ)\r\n\r\n2:Şahıs Şirketi",
+            "format": "int32"
+          },
+          "product_SanalPOS": {
+            "type": "boolean",
+            "description": ""
+          },
+          "product_MobilOdeme": {
+            "type": "boolean",
+            "description": ""
+          },
+          "product_FizikselPOS": {
+            "type": "boolean",
+            "description": ""
+          },
+          "product_SoftPOS": {
+            "type": "boolean",
+            "description": ""
+          },
+          "product_ParaTransferi": {
+            "type": "boolean",
+            "description": ""
+          },
+          "isWebOnboarding": {
+            "type": "boolean",
+            "description": ""
+          },
+          "channelId": {
+            "type": "integer",
+            "description": "",
+            "format": "int32",
+            "nullable": true
+          },
+          "companyDetail": {
+            "$ref": "#/components/schemas/Pbm.Api.Data.Models.Request.Onboarding.CompanyDetail"
+          },
+          "authorizedContact1": {
+            "$ref": "#/components/schemas/Pbm.Api.Data.Models.Request.Onboarding.AuthorizedContact"
+          },
+          "authorizedContact2": {
+            "$ref": "#/components/schemas/Pbm.Api.Data.Models.Request.Onboarding.AuthorizedContact"
+          },
+          "authorizedContact3": {
+            "$ref": "#/components/schemas/Pbm.Api.Data.Models.Request.Onboarding.AuthorizedContact"
+          },
+          "authorizedContact4": {
+            "$ref": "#/components/schemas/Pbm.Api.Data.Models.Request.Onboarding.AuthorizedContact"
+          },
+          "businessPartner1": {
+            "$ref": "#/components/schemas/Pbm.Api.Data.Models.Request.Onboarding.BusinessPartner"
+          },
+          "businessPartner2": {
+            "$ref": "#/components/schemas/Pbm.Api.Data.Models.Request.Onboarding.BusinessPartner"
+          },
+          "businessPartner3": {
+            "$ref": "#/components/schemas/Pbm.Api.Data.Models.Request.Onboarding.BusinessPartner"
+          },
+          "businessPartner4": {
+            "$ref": "#/components/schemas/Pbm.Api.Data.Models.Request.Onboarding.BusinessPartner"
+          },
+          "businessContact": {
+            "$ref": "#/components/schemas/Pbm.Api.Data.Models.Request.Onboarding.Contact"
+          },
+          "technicalContact": {
+            "$ref": "#/components/schemas/Pbm.Api.Data.Models.Request.Onboarding.Contact"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Pbm.Api.Data.Models.Response.CitiesResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "1:SUCCESS\r\n\r\n0:FAIL",
+            "format": "int32"
+          },
+          "errorCode": {
+            "type": "integer",
+            "description": "",
+            "format": "int32"
+          },
+          "errorDesc": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "citiesListDto": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pbm.Api.Data.DatabaseObjects.Configuration.CitiesDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Pbm.Api.Data.Models.Response.CreateOnboardingResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "1:SUCCESS\r\n\r\n0:FAIL",
+            "format": "int32"
+          },
+          "errorCode": {
+            "type": "integer",
+            "description": "",
+            "format": "int32"
+          },
+          "errorDesc": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "onboardingId": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "documentTypes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.DocumentType"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Pbm.Api.Data.Models.Response.DistrictsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "1:SUCCESS\r\n\r\n0:FAIL",
+            "format": "int32"
+          },
+          "errorCode": {
+            "type": "integer",
+            "description": "",
+            "format": "int32"
+          },
+          "errorDesc": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "districsListDto": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pbm.Api.Data.DatabaseObjects.Configuration.DistrictDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Pbm.Api.Data.Models.Response.DocumentType": {
+        "type": "object",
+        "properties": {
+          "documentTypeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "documentDetail": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Pbm.Api.Data.Models.Response.FetchOnboardingDocumentsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "1:SUCCESS\r\n\r\n0:FAIL",
+            "format": "int32"
+          },
+          "errorCode": {
+            "type": "integer",
+            "description": "",
+            "format": "int32"
+          },
+          "errorDesc": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "documentTypes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.DocumentType"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Pbm.Api.Data.Models.Response.FetchOnboardingResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "1:SUCCESS\r\n\r\n0:FAIL",
+            "format": "int32"
+          },
+          "errorCode": {
+            "type": "integer",
+            "description": "",
+            "format": "int32"
+          },
+          "errorDesc": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "onboardingData": {
+            "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.Onboarding.OnboardingData"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Pbm.Api.Data.Models.Response.Onboarding.AuthorizedContact": {
+        "type": "object",
+        "properties": {
+          "approvedStatus": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "approvedByNote": {
+            "type": "string",
+            "nullable": true
+          },
+          "approvedStatusDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "surname": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "integer",
+            "description": "",
+            "format": "int64"
+          },
+          "tckn": {
+            "type": "integer",
+            "description": "",
+            "format": "int64"
+          },
+          "birthDate": {
+            "type": "string",
+            "description": "",
+            "format": "date-time",
+            "nullable": true
+          },
+          "representationType": {
+            "type": "integer",
+            "description": "1:Münferit\r\n2:Müşterek",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Pbm.Api.Data.Models.Response.Onboarding.BusinessPartner": {
+        "type": "object",
+        "properties": {
+          "approvedStatus": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "approvedByNote": {
+            "type": "string",
+            "nullable": true
+          },
+          "approvedStatusDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "surname": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "integer",
+            "description": "",
+            "format": "int64"
+          },
+          "tckn": {
+            "type": "integer",
+            "description": "",
+            "format": "int64"
+          },
+          "birthDate": {
+            "type": "string",
+            "description": "",
+            "format": "date-time",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Pbm.Api.Data.Models.Response.Onboarding.CompanyDetail": {
+        "type": "object",
+        "properties": {
+          "approvedStatus": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "approvedByNote": {
+            "type": "string",
+            "nullable": true
+          },
+          "approvedStatusDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "companyName": {
+            "type": "string",
+            "description": "Şirket Adı",
+            "nullable": true
+          },
+          "tradeRegisterNo": {
+            "type": "string",
+            "description": "Ticaret Sicil No",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "description": "Fatura Adresi",
+            "nullable": true
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "Posta Kodu",
+            "nullable": true
+          },
+          "countryCode": {
+            "type": "string",
+            "description": "Ülke Kodu",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "description": "İl",
+            "nullable": true
+          },
+          "district": {
+            "type": "string",
+            "description": "İlçe",
+            "nullable": true
+          },
+          "taxOffice": {
+            "type": "string",
+            "description": "Vergi Dairesi",
+            "nullable": true
+          },
+          "taxNo": {
+            "type": "string",
+            "description": "Vergi Numarası",
+            "nullable": true
+          },
+          "naceCode": {
+            "type": "string",
+            "description": "Nace Kodu",
+            "nullable": true
+          },
+          "website": {
+            "type": "string",
+            "description": "Web Sitesi",
+            "nullable": true
+          },
+          "companyPhoneNumber": {
+            "type": "string",
+            "description": "Şirket telefon numarası",
+            "nullable": true
+          },
+          "iban": {
+            "type": "string",
+            "description": "TRY IBAN",
+            "nullable": true
+          },
+          "comment": {
+            "type": "string",
+            "description": "Şirket ile ilgili açıklama",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Pbm.Api.Data.Models.Response.Onboarding.Contact": {
+        "type": "object",
+        "properties": {
+          "approvedStatus": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "approvedByNote": {
+            "type": "string",
+            "nullable": true
+          },
+          "approvedStatusDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "surname": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "integer",
+            "description": "",
+            "format": "int64",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Pbm.Api.Data.Models.Response.Onboarding.Document": {
+        "type": "object",
+        "properties": {
+          "approvedStatus": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "approvedByNote": {
+            "type": "string",
+            "nullable": true
+          },
+          "approvedStatusDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "documentTypeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "fileNameOriginal": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "fileName": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "preSignedUrl": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "expireTime": {
+            "type": "string",
+            "description": "",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Pbm.Api.Data.Models.Response.Onboarding.OnboardingData": {
+        "type": "object",
+        "properties": {
+          "approvedStatus": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "approvedByNote": {
+            "type": "string",
+            "nullable": true
+          },
+          "approvedStatusDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "onboardingDataId": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "companyType": {
+            "type": "integer",
+            "description": "1:Ticari İşletme (Ltd,AŞ)\r\n\r\n2:Şahıs Şirketi",
+            "format": "int32"
+          },
+          "companyDetail": {
+            "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.Onboarding.CompanyDetail"
+          },
+          "authorizedContact1": {
+            "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.Onboarding.AuthorizedContact"
+          },
+          "authorizedContact2": {
+            "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.Onboarding.AuthorizedContact"
+          },
+          "authorizedContact3": {
+            "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.Onboarding.AuthorizedContact"
+          },
+          "authorizedContact4": {
+            "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.Onboarding.AuthorizedContact"
+          },
+          "businessPartner1": {
+            "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.Onboarding.BusinessPartner"
+          },
+          "businessPartner2": {
+            "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.Onboarding.BusinessPartner"
+          },
+          "businessPartner3": {
+            "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.Onboarding.BusinessPartner"
+          },
+          "businessPartner4": {
+            "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.Onboarding.BusinessPartner"
+          },
+          "businessContact": {
+            "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.Onboarding.Contact"
+          },
+          "technicalContact": {
+            "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.Onboarding.Contact"
+          },
+          "documentList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pbm.Api.Data.Models.Response.Onboarding.Document"
+            },
+            "description": "",
+            "nullable": true
+          },
+          "product_SanalPOS": {
+            "type": "boolean",
+            "description": ""
+          },
+          "product_MobilOdeme": {
+            "type": "boolean",
+            "description": ""
+          },
+          "product_FizikselPOS": {
+            "type": "boolean",
+            "description": ""
+          },
+          "product_SoftPOS": {
+            "type": "boolean",
+            "description": ""
+          },
+          "product_ParaTransferi": {
+            "type": "boolean",
+            "description": ""
+          },
+          "isWebOnboarding": {
+            "type": "boolean",
+            "description": ""
+          },
+          "channelId": {
+            "type": "integer",
+            "description": "",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Pbm.Api.Data.Models.Response.UploadOnboardingDocumentResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "1:SUCCESS\r\n\r\n0:FAIL",
+            "format": "int32"
+          },
+          "errorCode": {
+            "type": "integer",
+            "description": "",
+            "format": "int32"
+          },
+          "errorDesc": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "basic": {
+        "type": "http",
+        "description": "Basic Authorization header using the Bearer scheme.",
+        "scheme": "basic"
+      },
+      "Bearer": {
+        "type": "http",
+        "description": "Bearer Authentication with JWT Token",
+        "scheme": "Bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "basic": [ ]
+    },
+    {
+      "Bearer": [ ]
+    }
+  ]
+}

@@ -1,0 +1,724 @@
+{
+	"info": {
+		"_postman_id": "36ba48e4-4d81-4135-b81c-e2a29c92e00a",
+		"name": "Onboarding API Details",
+		"description": "Üye işyerlerinin Paybyme tarafında onnoarding sistemidir.\n\nBasic Authorization yapılmalıdır.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21014557",
+		"_collection_link": "https://pbmdev.postman.co/workspace/PaybyMe-All-API~049bb184-bd0e-4975-8954-9e5d31bc7917/collection/21014557-36ba48e4-4d81-4135-b81c-e2a29c92e00a?action=share&source=collection_link&creator=21014557"
+	},
+	"item": [
+		{
+			"name": "CreateUpdateRetrieve",
+			"item": [
+				{
+					"name": "RetrieveOnboardingDetails",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "Pwd1",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "Usr1",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://testonboardingapi.payby.me/api/v1/onboarding/:onboardingId",
+							"protocol": "https",
+							"host": [
+								"testonboardingapi",
+								"payby",
+								"me"
+							],
+							"path": [
+								"api",
+								"v1",
+								"onboarding",
+								":onboardingId"
+							],
+							"variable": [
+								{
+									"key": "onboardingId",
+									"value": "CB49B419-5F27-4305-AA95-4F83BE77F4EB",
+									"description": "{{onboardingId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateOnboardingDetails",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"  const generateVKN = () =>  {\r",
+									"  var random;\r",
+									"  while (random?.length !== 9) {\r",
+									"    random = Math.round(Math.random() * 1000 * 1000 * 1000).toString();\r",
+									"  }\r",
+									"  var total = 0;\r",
+									"  for (var index = 0; index < 9; index++) {\r",
+									"    var orderNumber = (index + 1);\r",
+									"    var result = (parseInt(random[index]) + 10 - orderNumber) % 10;\r",
+									"    if (result === 9) {\r",
+									"      total += result;\r",
+									"    } else {\r",
+									"      //(result * 2^(10-orderNumber)) % 9\r",
+									"      total += (result * Math.pow(2, (10 - orderNumber))) % 9;\r",
+									"    }\r",
+									"  }\r",
+									"  var digit10 = (10 - (total % 10)) % 10;\r",
+									"  return random + digit10;\r",
+									"}\r",
+									"\r",
+									"  const generateTckn = () => {\r",
+									"     let tcno = \"\" + Math.floor(900000001 * Math.random() + 1e8),\r",
+									"      list = tcno.split(\"\").map(function(t) {\r",
+									"          return parseInt(t, 10)\r",
+									"      }),\r",
+									"      odd = list[0] + list[2] + list[4] + list[6] + list[8],\r",
+									"      double = list[1] + list[3] + list[5] + list[7],\r",
+									"      tc10 = (7 * odd - double) % 10;\r",
+									"      tcno = tcno + (\"\" + tc10) + (\"\" + (double + odd + tc10) % 10)\r",
+									"      return tcno;\r",
+									"  }\r",
+									"  const generatePhoneNumber = () => {\r",
+									"     let phoneNumber = \"9053\"+Math.floor(Math.random()*5)+Math.floor(Math.random()*9)+Math.floor(Math.random()*9)+Math.floor(Math.random()*9)+Math.floor(Math.random()*9)+Math.floor(Math.random()*9)+Math.floor(Math.random()*9)+Math.floor(Math.random()*9)\r",
+									"      return phoneNumber\r",
+									"  }\r",
+									"\r",
+									"  const baseUrl= 'https://randomuser.me/api/';\r",
+									"  const getRequest = { url: baseUrl, method: 'GET' };\r",
+									"  const generateRandomUser = async(envVariable) => {\r",
+									"      pm.sendRequest(getRequest, (error, res) => {\r",
+									"          const randomUser = res.json().results[0];\r",
+									"          const user = {\r",
+									"               \"Name\": randomUser.name.first,\r",
+									"               \"Surname\": randomUser.name.last,\r",
+									"               \"Email\": randomUser.email,\r",
+									"               \"PhoneNumber\": generatePhoneNumber(),\r",
+									"               \"Tckn\": generateTckn(),\r",
+									"               \"BirthDate\": randomUser.dob.date.split('T')[0],\r",
+									"               \"RepresentationType\": Math.floor(Math.random() * (2) + 1),\r",
+									"               \"Address\": randomUser.location.street.name + \" \" + randomUser.location.city + \" \" + randomUser.location.state + \" \" + randomUser.location.country\r",
+									"           }\r",
+									"\r",
+									"           for(var key in user){\r",
+									"              pm.collectionVariables.set(envVariable+key, user[key]);\r",
+									"           }\r",
+									"      });\r",
+									"  } \r",
+									"  const getCompanyDetails = async(envVariable) => {\r",
+									"      const baseUrl= 'https://testonboardingapi.payby.me/api/v1/cities';\r",
+									"      const user = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(\"Usr1:Pwd1\"));\r",
+									"      const getRequest = { \r",
+									"          url: baseUrl, \r",
+									"          method: 'GET', \r",
+									"          header: { \r",
+									"              \"Content-Type\": \"application/x-www-form-urlencoded\", \r",
+									"              \"Authorization\": \"Basic \" + user\r",
+									"          }\r",
+									"      }\r",
+									"      pm.sendRequest(getRequest, async(error,res) => {\r",
+									"          let companyCity = res.json().citiesListDto;\r",
+									"          const randomCityIndex = Math.floor(Math.random()*companyCity.length)\r",
+									"          const {city, cityCode} = companyCity[randomCityIndex]\r",
+									"          await getCompanyCityDistricts(envVariable, city, cityCode)\r",
+									"      });\r",
+									"  }\r",
+									"  const getCompanyCityDistricts = async(envVariable, city, cityCode) => {\r",
+									"      const baseUrl= 'https://testonboardingapi.payby.me/api/v1/districts/' + cityCode;\r",
+									"      const user = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(\"Usr1:Pwd1\"));\r",
+									"      const getRequest = { \r",
+									"          url: baseUrl, \r",
+									"          method: 'GET', \r",
+									"          header: { \r",
+									"              \"Content-Type\": \"application/x-www-form-urlencoded\", \r",
+									"              \"Authorization\": \"Basic \" + user\r",
+									"          }\r",
+									"      }\r",
+									"      pm.sendRequest(getRequest, async(error,res) => {        \r",
+									"          let companyDisctrict = res.json().districsListDto;\r",
+									"          const randomDiscrictIndex = Math.floor(Math.random()*companyDisctrict.length)\r",
+									"          companyCityDiscrictDetails = companyDisctrict[randomDiscrictIndex]\r",
+									"          for(var index in companyCityDiscrictDetails){\r",
+									"              pm.collectionVariables.set(envVariable+index, companyCityDiscrictDetails[index]);\r",
+									"          }\r",
+									"          const zipCode = cityCode.split(\"-\")[1] + \"\" + Math.floor(Math.random()*9) + Math.floor(Math.random()*9) + Math.floor(Math.random()*9)\r",
+									"          const address = companyCityDiscrictDetails.district + \" Mahallesi \" + companyCityDiscrictDetails.districtCode + \" No \" + city + \" Türkiye\" \r",
+									"          pm.collectionVariables.set(envVariable+\"city\", city);\r",
+									"          pm.collectionVariables.set(envVariable+\"address\", address);\r",
+									"          pm.collectionVariables.set(envVariable+\"zipCode\", zipCode);\r",
+									"      });\r",
+									"  }\r",
+									"\r",
+									"  const generateCompany = (envVariable) => {\r",
+									"      const companyDetails = {\r",
+									"          \"taxNo\": generateVKN(),\r",
+									"          \"naceCode\": \"\" + Math.floor(Math.random() * 9 + 1)  + Math.floor(Math.random() * 9 + 1) + Math.floor(Math.random() * 9 + 1) + Math.floor(Math.random() * 9 + 1) + Math.floor(Math.random() * 9 + 1) + Math.floor(Math.random() * 9 + 1),\r",
+									"          \"website\": \"www.testmerchant.com\",\r",
+									"          \"companyPhoneNumber\": generatePhoneNumber(),\r",
+									"      }         \r",
+									"      for(var key in companyDetails){\r",
+									"              pm.collectionVariables.set(envVariable+key, companyDetails[key]);\r",
+									"      }\r",
+									"  }\r",
+									"\r",
+									"\r",
+									"  const startScript = async() =>{\r",
+									"     console.log(\"Request started!!\")\r",
+									"      generateCompany('company');\r",
+									"       await getCompanyDetails('company');\r",
+									"       await generateRandomUser(\"user1\");\r",
+									"       await generateRandomUser(\"user2\");\r",
+									"  }\r",
+									"\r",
+									"  startScript();"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if(pm.response.json() &&  pm.response.json().status === 1){\r",
+									"    pm.collectionVariables.set(\"onboardingId\", pm.response.json().onboardingId);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{BasicAuthPassword}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{BasicAuthUsername}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"companyType\": 2,\r\n  \"product_SanalPOS\": true,\r\n  \"product_MobilOdeme\": false,\r\n  \"product_FizikselPOS\": false,\r\n  \"product_SoftPOS\": false,\r\n  \"product_ParaTransferi\": false,\r\n  \"companyDetail\": {\r\n    \"companyName\": \"CompanyType2.\",\r\n    \"iban\": \"TR660006267794191396587689\",\r\n    \"tradeRegisterNo\": \"123234\",\r\n    \"countryCode\": \"TR\",\r\n    \"address\": \"{{companyaddress}}\",\r\n    \"zipCode\": \"{{companyzipCode}}\",\r\n    \"city\": \"{{companycityCode}}\",\r\n    \"district\": \"{{companydistrictCode}}\",\r\n    \"taxOffice\": \"{{companydistrict}}\",\r\n    \"taxNo\": \"{{companytaxNo}}\",\r\n    \"naceCode\": \"{{companynaceCode}}\",\r\n    \"website\": \"{{companywebsite}}\",\r\n    \"companyPhoneNumber\": \"{{companycompanyPhoneNumber}}\"\r\n  },\r\n  \"authorizedContact1\": {\r\n    \"name\": \"{{user1Name}}\",\r\n    \"surname\": \"{{user1Surname}}\",\r\n    \"email\": \"{{user1Email}}\",\r\n    \"phoneNumber\": {{user1PhoneNumber}},\r\n    \"tckn\": {{user1Tckn}},\r\n    \"birthDate\": \"{{user1BirthDate}}\",\r\n    \"representationType\": {{user1RepresentationType}}\r\n  },\r\n  \"authorizedContact2\": {\r\n    \"name\": \"{{user2Name}}\",\r\n    \"surname\": \"{{user2Surname}}\",\r\n    \"email\": \"{{user2Email}}\",\r\n    \"phoneNumber\": {{user2PhoneNumber}},\r\n    \"tckn\": {{user2Tckn}},\r\n    \"birthDate\": \"{{user2BirthDate}}\",\r\n    \"representationType\": {{user2RepresentationType}}\r\n  },\r\n  \"businessPartner1\": {\r\n    \"name\": \"{{user1Name}}\",\r\n    \"surname\": \"{{user1Surname}}\",\r\n    \"email\": \"{{user1Email}}\",\r\n    \"phoneNumber\": {{user1PhoneNumber}},\r\n    \"tckn\": {{user1Tckn}},\r\n    \"birthDate\": \"{{user1BirthDate}}\",\r\n    \"address\": \"{{user1Address}}\"\r\n  },\r\n  \"businessContact\": {\r\n    \"name\": \"{{user2Name}}\",\r\n    \"surname\": \"{{user2Surname}}\",\r\n    \"email\": \"{{user2Email}}\",\r\n    \"phoneNumber\": {{user2PhoneNumber}}\r\n  },\r\n  \"technicalContact\": {\r\n    \"name\": \"{{user1Name}}\",\r\n    \"surname\": \"{{user1Surname}}\",\r\n    \"email\": \"{{user1Email}}\",\r\n    \"phoneNumber\": {{user1PhoneNumber}}\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://testonboardingapi.payby.me/api/v1/onboarding",
+							"protocol": "https",
+							"host": [
+								"testonboardingapi",
+								"payby",
+								"me"
+							],
+							"path": [
+								"api",
+								"v1",
+								"onboarding"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateOnboardingDetails",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// if(pm.response.json().status === 1){\r",
+									"//     pm.collectionVariables.set(\"onboardingId\", pm.response.json().onboardingId);\r",
+									"// }"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "Pwd1",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "Usr1",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"companyType\": 1,\r\n  \"product_SanalPOS\": true,\r\n  \"product_MobilOdeme\": false,\r\n  \"product_FizikselPOS\": true,\r\n  \"product_SoftPOS\": true,\r\n  \"product_ParaTransferi\": true,\r\n  \"companyDetail\": {\r\n    \"companyName\": \"AbC Company Name Ltd.\",\r\n    \"iban\": \"TR660006267794191396587689\",\r\n    \"tradeRegisterNo\": \"123234\",\r\n    \"countryCode\": \"TR\",\r\n    \"address\": \"{{companyaddress}}\",\r\n    \"zipCode\": \"{{companyzipCode}}\",\r\n    \"city\": \"{{companycityCode}}\",\r\n    \"district\": \"{{companydistrictCode}}\",\r\n    \"taxOffice\": \"{{companydistrict}}\",\r\n    \"taxNo\": \"{{companytaxNo}}\",\r\n    \"naceCode\": \"{{companynaceCode}}\",\r\n    \"website\": \"{{companywebsite}}\",\r\n    \"companyPhoneNumber\": \"{{companycompanyPhoneNumber}}\"\r\n  },\r\n  \"authorizedContact1\": {\r\n    \"name\": \"{{user1Name}}\",\r\n    \"surname\": \"{{user1Surname}}\",\r\n    \"email\": \"{{user1Email}}\",\r\n    \"phoneNumber\": {{user1PhoneNumber}},\r\n    \"tckn\": {{user1Tckn}},\r\n    \"birthDate\": \"{{user1BirthDate}}\",\r\n    \"representationType\": {{user1RepresentationType}}\r\n  },\r\n  \"authorizedContact2\": {\r\n    \"name\": \"{{user2Name}}\",\r\n    \"surname\": \"{{user2Surname}}\",\r\n    \"email\": \"{{user2Email}}\",\r\n    \"phoneNumber\": {{user2PhoneNumber}},\r\n    \"tckn\": {{user2Tckn}},\r\n    \"birthDate\": \"{{user2BirthDate}}\",\r\n    \"representationType\": {{user2RepresentationType}}\r\n  },\r\n  \"businessPartner1\": {\r\n    \"name\": \"{{user1Name}}\",\r\n    \"surname\": \"{{user1Surname}}\",\r\n    \"email\": \"{{user1Email}}\",\r\n    \"phoneNumber\": {{user1PhoneNumber}},\r\n    \"tckn\": {{user1Tckn}},\r\n    \"birthDate\": \"{{user1BirthDate}}\",\r\n    \"address\": \"{{user1Address}}\"\r\n  },\r\n  \"businessContact\": {\r\n    \"name\": \"{{user2Name}}\",\r\n    \"surname\": \"{{user2Surname}}\",\r\n    \"email\": \"{{user2Email}}\",\r\n    \"phoneNumber\": {{user2PhoneNumber}}\r\n  },\r\n  \"technicalContact\": {\r\n    \"name\": \"{{user1Name}}\",\r\n    \"surname\": \"{{user1Surname}}\",\r\n    \"email\": \"{{user1Email}}\",\r\n    \"phoneNumber\": {{user1PhoneNumber}}\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://testonboardingapi.payby.me/api/v1/onboardingUpdate/:onboardingId",
+							"protocol": "https",
+							"host": [
+								"testonboardingapi",
+								"payby",
+								"me"
+							],
+							"path": [
+								"api",
+								"v1",
+								"onboardingUpdate",
+								":onboardingId"
+							],
+							"variable": [
+								{
+									"key": "onboardingId",
+									"value": "35458a13-eeed-4e0d-8e5f-acd648488495",
+									"description": "{{onboardingId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Utility",
+			"item": [
+				{
+					"name": "OnboardingDocuments",
+					"item": [
+						{
+							"name": "RetrieveRequiredDocumentList",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "Pwd1",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "Usr1",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://testonboardingapi.payby.me/api/v1/onboardingdocuments/:companyType",
+									"protocol": "https",
+									"host": [
+										"testonboardingapi",
+										"payby",
+										"me"
+									],
+									"path": [
+										"api",
+										"v1",
+										"onboardingdocuments",
+										":companyType"
+									],
+									"variable": [
+										{
+											"key": "companyType",
+											"value": "1",
+											"description": "1:Ticari(LTD, AŞ) 2:Şahıs "
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SubmitOnboardingDocuments",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "Pwd1",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "Usr1",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "file",
+									"file": {
+										"src": "/C:/Users/melih.guler/Desktop/cihan/others/CIHAN/Daotec/Ekran Alıntısı.PNG"
+									}
+								},
+								"url": {
+									"raw": "https://testonboardingapi.payby.me/api/v1/onboardingdocuments/:onboardingId/:documentTypeId",
+									"protocol": "https",
+									"host": [
+										"testonboardingapi",
+										"payby",
+										"me"
+									],
+									"path": [
+										"api",
+										"v1",
+										"onboardingdocuments",
+										":onboardingId",
+										":documentTypeId"
+									],
+									"variable": [
+										{
+											"key": "onboardingId",
+											"value": "{{onboardingId}}"
+										},
+										{
+											"key": "documentTypeId",
+											"value": "201",
+											"description": "RetrieveRequiredDocumentList"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UpdateOnboardingDocument",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "Pwd1",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "Usr1",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "file",
+									"file": {}
+								},
+								"url": {
+									"raw": "https://testonboardingapi.payby.me/api/v1/onboardingdocumentsupdate/:onboardingId/:documentTypeId/:documentId",
+									"protocol": "https",
+									"host": [
+										"testonboardingapi",
+										"payby",
+										"me"
+									],
+									"path": [
+										"api",
+										"v1",
+										"onboardingdocumentsupdate",
+										":onboardingId",
+										":documentTypeId",
+										":documentId"
+									],
+									"variable": [
+										{
+											"key": "onboardingId",
+											"value": "{{onboardingId}}"
+										},
+										{
+											"key": "documentTypeId",
+											"value": "105"
+										},
+										{
+											"key": "documentId",
+											"value": "1181",
+											"description": "RetrieveOnboardingDetails : \"documentList\": [],"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "OnboardingDetails",
+					"item": [
+						{
+							"name": "RetrieveCityCityCode",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "Pwd1",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "Usr1",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://testonboardingapi.payby.me/api/v1/cities",
+									"protocol": "https",
+									"host": [
+										"testonboardingapi",
+										"payby",
+										"me"
+									],
+									"path": [
+										"api",
+										"v1",
+										"cities"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "RetrieveCityDistricts",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "Pwd1",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "Usr1",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://testonboardingapi.payby.me/api/v1/districts/:cityCode",
+									"protocol": "https",
+									"host": [
+										"testonboardingapi",
+										"payby",
+										"me"
+									],
+									"path": [
+										"api",
+										"v1",
+										"districts",
+										":cityCode"
+									],
+									"variable": [
+										{
+											"key": "cityCode",
+											"value": "TR-34"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BasicAuthPassword",
+			"value": "Pwd1"
+		},
+		{
+			"key": "BasicAuthUsername",
+			"value": "Usr1"
+		},
+		{
+			"key": "companytaxNo",
+			"value": ""
+		},
+		{
+			"key": "companynaceCode",
+			"value": ""
+		},
+		{
+			"key": "companywebsite",
+			"value": ""
+		},
+		{
+			"key": "companycompanyPhoneNumber",
+			"value": ""
+		},
+		{
+			"key": "user2Name",
+			"value": ""
+		},
+		{
+			"key": "user2Surname",
+			"value": ""
+		},
+		{
+			"key": "user2Email",
+			"value": ""
+		},
+		{
+			"key": "user2PhoneNumber",
+			"value": ""
+		},
+		{
+			"key": "user2Tckn",
+			"value": ""
+		},
+		{
+			"key": "user2BirthDate",
+			"value": ""
+		},
+		{
+			"key": "user2RepresentationType",
+			"value": ""
+		},
+		{
+			"key": "user2Address",
+			"value": ""
+		},
+		{
+			"key": "user1Name",
+			"value": ""
+		},
+		{
+			"key": "user1Surname",
+			"value": ""
+		},
+		{
+			"key": "user1Email",
+			"value": ""
+		},
+		{
+			"key": "user1PhoneNumber",
+			"value": ""
+		},
+		{
+			"key": "user1Tckn",
+			"value": ""
+		},
+		{
+			"key": "user1BirthDate",
+			"value": ""
+		},
+		{
+			"key": "user1RepresentationType",
+			"value": ""
+		},
+		{
+			"key": "user1Address",
+			"value": ""
+		},
+		{
+			"key": "companycityCode",
+			"value": ""
+		},
+		{
+			"key": "companydistrict",
+			"value": ""
+		},
+		{
+			"key": "companydistrictCode",
+			"value": ""
+		},
+		{
+			"key": "companycity",
+			"value": ""
+		},
+		{
+			"key": "companyaddress",
+			"value": ""
+		},
+		{
+			"key": "companyzipCode",
+			"value": ""
+		},
+		{
+			"key": "onboardingId",
+			"value": ""
+		}
+	]
+}
